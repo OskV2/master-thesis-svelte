@@ -15,7 +15,7 @@
           AV
         </div>
         <span class="font-display font-semibold text-lg text-slate-100">
-          AlgoViz <span class="text-xs text-primary-400 ml-1">Svelte</span>
+          AlgoViz
         </span>
       </a>
 
@@ -46,7 +46,7 @@
   <!-- Footer -->
   <footer class="border-t border-slate-700/50 py-6 text-center text-sm text-slate-500">
     <p>
-      AlgoViz (Svelte) — Praca magisterska, Uniwersytet Zielonogórski © {new Date().getFullYear()}
+      Maciej Buszkiewicz, Praca magisterska
     </p>
   </footer>
 </div>
