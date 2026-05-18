@@ -9,14 +9,18 @@
 
   let store = $derived($visualizationStore);
 
-  let bst = $state(null);
+  // BST instance must NOT be wrapped in $state — Svelte 5's proxy
+  // breaks class internals (this.root mutations, this.nextId increments).
+  // Using a plain module-level variable, like React's useRef.
+  let bstRef = { current: null };
+
   let inputValue = $state('');
   let error = $state(null);
 
   onMount(() => {
-    const result = BST.buildFromArray(DEFAULT_VALUES);
-    bst = result.bst;
-    visualizationStore.loadAlgorithm(DEFAULT_VALUES, result.steps);
+    const { bst, steps: buildSteps } = BST.buildFromArray(DEFAULT_VALUES);
+    bstRef.current = bst;
+    visualizationStore.loadAlgorithm(DEFAULT_VALUES, buildSteps);
   });
 
   // Auto-play tick
@@ -29,11 +33,12 @@
   function runOperation(operation) {
     error = null;
     const val = Number(inputValue);
-    if (isNaN(val) || inputValue.trim() === '') {
+    if (isNaN(val) || String(inputValue).trim() === '') {
       error = 'Wpisz liczbę.';
       return;
     }
 
+    const bst = bstRef.current;
     if (!bst) return;
 
     let newSteps;
@@ -51,17 +56,19 @@
         return;
     }
 
+    // Append new steps to existing ones
     const allSteps = [...store.steps, ...newSteps];
     const prevLength = store.steps.length;
     visualizationStore.loadAlgorithm(null, allSteps);
+    // Jump to first new step
     visualizationStore.goToStep(prevLength);
     inputValue = '';
   }
 
   function handleReset() {
-    const result = BST.buildFromArray(DEFAULT_VALUES);
-    bst = result.bst;
-    visualizationStore.loadAlgorithm(DEFAULT_VALUES, result.steps);
+    const { bst, steps: buildSteps } = BST.buildFromArray(DEFAULT_VALUES);
+    bstRef.current = bst;
+    visualizationStore.loadAlgorithm(DEFAULT_VALUES, buildSteps);
   }
 
   function handleKeydown(e) {
