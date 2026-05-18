@@ -1,5 +1,5 @@
 <script>
-  let { onSubmit, defaultSize = 10, maxSize = 30, maxValue = 99 } = $props();
+  let { onSubmit, defaultSize = 10, maxSize = 75, maxValue = 200 } = $props();
 
   let text = $state('');
   let error = $state(null);
